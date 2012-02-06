@@ -1,0 +1,100 @@
+<?php
+
+       // Get ship_to information
+       if( $db->f("user_info_id") != $dbbt->f("user_info_id")) {
+         $q2  = "SELECT * FROM #__vm_user_info WHERE user_info_id='".$db->f("user_info_id")."'";
+         $dbst = new ps_DB;
+         $dbst->setQuery($q2);
+         $dbst->query();
+         $dbst->next_record();
+       }
+       else  {
+         $dbst = $dbbt;
+       }
+       $q3 = "SELECT * FROM #__vm_order_item WHERE user_info_id='".$db->f("user_info_id")."'";
+       $dbcprod = new ps_DB;
+       $dbcprod->setQuery($q3);
+       $dbcprod->query();
+       $dbcprod->next_record();
+       for($i = 0; $i < count($dbcprod->record); $i++){ //sort out user orders
+          $orders[$i] = $dbcprod->record[$i]->order_id;
+       }
+       arsort($orders);
+       $this_order_id = current($orders); //sets most recent order number for user
+       for($i = 0; $i < count($dbcprod->record); $i++){ //gets all product info entries for this order number
+           if($dbcprod->record[$i]->order_id == $this_order_id){
+             $this_order[$i] = $dbcprod->record[$i];
+           }
+       }
+       sort($this_order);
+
+       //2co c_prods to send
+       for($i = 0; $i < count($this_order); $i++){ //creates 2co c_prod parameters
+          $twoco_prod_info["c_prod_$i"] = $this_order[$i]->order_item_sku .",". $this_order[$i]->product_quantity;
+          $twoco_prod_info["c_name_$i"] = $this_order[$i]->order_item_name;
+          $twoco_prod_info["c_price_$i"] = $this_order[$i]->product_final_price;
+          $twoco_prod_info["c_description_$i"] = $this_order[$i]->order_item_name .",". $this_order[$i]->product_attribute;
+       }
+
+       //Authnet vars to send
+       $formdata = array (
+       'x_login' => TWOCO_LOGIN,
+       'x_email_merchant' => ((TWOCO_MERCHANT_EMAIL == 'True') ? 'TRUE' : 'FALSE'),
+       'id_type' => 1, //added for c_prod compliance
+
+       // Customer Name and Billing Address
+       'x_first_name' => $dbbt->f("first_name"),
+       'x_last_name' => $dbbt->f("last_name"),
+       'x_company' => $dbbt->f("company"),
+       'x_address' => $dbbt->f("address_1"),
+       'x_city' => $dbbt->f("city"),
+       'x_state' => $dbbt->f("state"),
+       'x_zip' => $dbbt->f("zip"),
+       'x_country' => $dbbt->f("country"),
+       'x_phone' => $dbbt->f("phone_1"),
+       'x_fax' => $dbbt->f("fax"),
+       'x_email' => $dbbt->f("email"),
+
+       // Customer Shipping Address
+       'x_ship_to_first_name' => $dbst->f("first_name"),
+       'x_ship_to_last_name' => $dbst->f("last_name"),
+       'x_ship_to_company' => $dbst->f("company"),
+       'x_ship_to_address' => $dbst->f("address_1"),
+       'x_ship_to_city' => $dbst->f("city"),
+       'x_ship_to_state' => $dbst->f("state"),
+       'x_ship_to_zip' => $dbst->f("zip"),
+       'x_ship_to_country' => $dbst->f("country"),
+       'x_invoice_num' => $db->f("order_id"),
+       'merchant_order_id' => $db->f("order_number"),
+       'x_receipt_link_url' => SECUREURL."2checkout_notify.php"
+       );
+
+       $formdata = array_merge($twoco_prod_info, $formdata); //combine formdata with twoco_prod_info so c_prod info gets sent to 2co
+
+       if( TWOCO_TESTMODE == "Y" )
+       $formdata['demo'] = "Y";
+
+       $version = "2";
+
+       $url = "https://www.2checkout.com/checkout/purchase";
+
+       $formdata['x_amount'] = number_format($db->f("order_total"), 2, '.', '');
+
+       //build the post string
+       $poststring = '';
+       foreach($formdata AS $key => $val){
+       $poststring .= "<input type='hidden' name='$key' value='$val' />
+       ";
+       }
+
+?>
+
+<form id="cho" action="<?php echo $url ?>" method="post" target="_self">
+
+   <?php echo $poststring ?>
+
+   <p>Click on the Image below to pay...</p>
+
+   <input type="image" name="submit" src="https://www.2checkout.com/images/buy_logo.gif" border="0" alt="Make payments with 2Checkout, it's fast and secure!" title="Pay your Order with 2Checkout, it's fast and secure!" />
+
+   </form>
