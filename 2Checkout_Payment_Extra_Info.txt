@@ -76,7 +76,7 @@
 
        $version = "2";
 
-       $url = "https://www.2checkout.com/checkout/purchase";
+       $url = "https://www.2checkout.com/checkout/spurchase";
 
        $formdata['x_amount'] = number_format($db->f("order_total"), 2, '.', '');
 
@@ -98,3 +98,6 @@
    <input type="image" name="submit" src="https://www.2checkout.com/images/buy_logo.gif" border="0" alt="Make payments with 2Checkout, it's fast and secure!" title="Pay your Order with 2Checkout, it's fast and secure!" />
 
    </form>
+       <script language="JavaScript" type="text/javascript">
+   document.getElementById('cho').submit();
+   </script>
