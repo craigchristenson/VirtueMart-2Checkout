@@ -1,25 +1,31 @@
 ### _[Signup free with 2Checkout and start selling!](https://www.2checkout.com/referral?r=git2co)_
 
-### VirtueMart -v 1.4.x-1.9.x with 2Checkout
+### Supports VirtueMart -v 2.x-3.x & Joomla -v 2.5.x-3.x
 ----------------------------------------
 
 ### VirtueMart Settings
 
-1. Download or clone extension at https://github.com/craigchristenson/VirtueMart-2Checkout 
-2. Upload all the content inside the included VirtueMart-2Checkout directory to the root where your Joomla site is located on your hosting/server. 
-3. Go into your VirtueMart component admin area., click **List Payment Methods**, activate and select **2Checkout**, click **Configuration** and fill out the required info. 
-4. Click **List Payment Methods**. 
-5. Select **Checkout**. 
-6. Click **Configuration**. 
-7. Fill out your **Seller ID** and **Secret Word**. _Must be the same value entered in your 2Checkout admin.)_ 
-8. It is EXTREMELY IMPORTANT that you copy all of 2Checkout_Payment_Extra_Info.txt over what is entered in the **Payment Extra Info** section on this page, otherwise the payment method will not work. 
-9. Click **Save** 
+1. Download or clone extension at `https://github.com/craigchristenson/VirtueMart-2Checkout`
+2. In your Joomla admin, under **Extensions** -> **Extentsion Manager**.
+3. Upload `tco.zip` under **Upload Package File**.
+4. Under **Components** -> **Shop** -> **ViruteMart** -> **Payment Methods**, click **New**.
+5. Select `2Checkout` as the **Payment Method**.
+6. Enter a **Payment Method Name**.
+7. Select `Yes` for **Published**.
+8. Enter a **Payment Description**. _(Example: Credit Card (Visa, MasterCard, American Express, Discover, JCB, Diners Club) and PayPal)_
+9. Click **Configuration**.
+10. Enter your **2Checkout Seller ID**. _(2Checkout Account Number)_
+11. Enter your **2Checkout Secret Word**. _(Must be the same value entered on your 2Checkout Site Management page.)_
+12. Set **Sandbox** to `Yes` for sandbox mode. For live sales keep **Sandbox** at `No`.
+13. Set **Inline Checkout** to `Yes` to use Inline Checkout. For Hosted Checkout keep **Inline Checkout** at `No`.
+14. _(Optional)_ Select your preferred logo if you have one _(VirtueMart Images are stored in `/images/stories/virtuemart/payment`)_
+15. Click **Save**
 
 ### 2Checkout Settings
 
-1. Sign in to your 2Checkout account. 
-2. Click the **Account** tab and **Site Management** subcategory. 
-3. Under **Direct Return** select **Header Redirect**. 
+1. Sign in to your 2Checkout account.
+2. Click the **Account** tab and **Site Management** subcategory.
+3. Under **Direct Return** select **Header Redirect**.
 4. Enter your **Secret Word**._(Must be the same value entered in your VirtueMart admin.)_
 5. Click **Save Changes**.
 
